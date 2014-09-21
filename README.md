@@ -2,19 +2,19 @@
 
 ## Project Goal
 
-The goal of this project is to complete the requirements for the _Getting and Cleaning Data_ course project.
+The goal of this project is to complete the requirements for the __Getting and Cleaning Data__ course project.
 
 This involves taking data from the __Human Activity Recognition Using Smartphones Data Set__ and manipulating that information to create a tidy summary subset data file. This includes the following requirements:
 
-1.Merges the training and the test sets to create one data set.
-2.Extracts only the measurements on the mean and standard deviation for each measurement. 
-3.Uses descriptive activity names to name the activities in the data set
-4.Appropriately labels the data set with descriptive variable names. 
-5.From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+1. Merges the training and the test sets to create one data set.
+2. Extracts only the measurements on the mean and standard deviation for each measurement. 
+3. Uses descriptive activity names to name the activities in the data set
+4. Appropriately labels the data set with descriptive variable names. 
+5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 ## Data Source(s)
 
-This project uses and is dependent upon the"Human Activity Recognition Using Smartphones Dataset", which can be obtained at the following URL:
+This project uses and is dependent upon the __Human Activity Recognition Using Smartphones Dataset__, which can be obtained at the following URL:
 
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
 
@@ -22,8 +22,9 @@ Please see the README.txt and features_info.txt from that data source for inform
 
 http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
-When downloaded and unziped, a directory named _UCI HAR Dataset_ is created in which all the source data files can be found.
-_Note:_ It is assumed that no changes are made to this directory structure or the files within for successful execution of the code in this project.
+When downloaded and unziped, a directory named __UCI HAR Dataset__ is created in which all the source data files can be found.
+
+__Note:__ It is assumed that no changes are made to this directory structure or the files within for successful execution of the code in this project.
 
 
 ## Project Assumptions
@@ -64,6 +65,7 @@ R Code file containing the process for creating the results file from the source
       reshape
 
    Examples:
+
       ## Run the function with default parameters described above
       run_analysis()
 
