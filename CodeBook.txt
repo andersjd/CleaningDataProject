@@ -1,0 +1,177 @@
+================================================
+Data Science Getting and Cleaning Course Project
+Result File CodeBook
+Version 1.0
+JD Anderson
+================================================
+
+Document Purpose
+================
+This document details the Source Data used in the project, the transformations
+and manipulations made to that data, and the detailed structure of the
+resulting data file.
+
+For more general information on the general goals assumptions, and approach,
+please see the ReadMe.md file associated with this project.
+
+
+Project Data Source
+===================
+This project uses and is dependent upon the"Human Activity Recognition Using 
+Smartphones Dataset", which can be obtained at the following URL:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
+
+Please see the README.txt and features_info.txt from that location for
+information on the original experiments that generated the source data.
+More general information can be found at:
+
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+Data Source Files
+=================
+The following data files were used from the original data set:
+
+   features.txt: List of all features (accelerometer and gyroscope readings)
+      Used as a basis to derive column names in the final set
+
+   test/x_test.txt and train/x_train.txt: Test and Training Sets
+      Base data records (measurements) that are combined into the final set
+
+   test/y_test.txt and train/y_train.txt: Test and Training Label IDs
+      Used to align Activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS,
+      SITTING, STANDING, LAYING) with the base data records
+
+   test/subject_test.txt and train/subject_train.txt: Subject Identification
+      Used to align Subjects (ID'd 1 through 30) with the Base data records
+
+   activity_labels.txt: Text Activity names
+      Used to replace the numeric activity IDs from y_test/y_train into readable
+      text values
+
+
+Data Transformations
+====================
+The following data Manipulations are used to create the results data set.
+
+1. The features.txt table is used to replace the column names in the x_test and
+   x_train tables to provide meaningful column names for the measurements
+
+2. The y_test and y_train tables are joined to the x_test and x_train
+   tables in order to align the Activity IDs with the measurements
+
+3. The subject_test and subject_train tables are joined to the x_test
+   and x_train tables in order to align the Subject IDs with the measurements
+
+4. The x_test and x_train tables are combined into a single table
+   (Note that the Subjects are different between the x_test and x_train tables
+    so no overlap of data occurred)
+
+5. The activity_labels are joined with the combined table in order to provide
+   readable text names for the activities
+
+6. Columns that do not contain "mean()" or "std()" are removed from the combined
+   table**
+
+7. The combined table is grouped by Activity and Subject with the remaining columns
+   averaged to create a summary table**
+
+8. The Column (measurement) names in the summary table are updated with the following
+   logic to be (somewhat) more readable**
+	a. Replace the preceeding characters "t" and "f" with "Time" and "Frequency"
+	b. Replace "-mean()" with "AverageMean" to reflect the new summarized amount
+	c. Replace "-std()" with "AverageStdDev" to reflect the new summarized amount
+        d. Remove the special character minus signs from "-X","-Y", and "-Z" 
+
+** See the ReadMe.md file for specific requirements driving items 6, 7, and 8.
+
+
+Project Data Set Results structure
+==================================
+The resulting data files is generated using "write.table" with row names excluded and
+the first record containing Column Names. The following code will load it into R:
+
+  read.table("FileName",header=TRUE)
+
+The result table is 180 rows by 68 Columns, with each row defining a unique combination
+of Activity and SubjectID, and the remaining columns containing the averaged
+Mean and Standard Deviation (StdDev) measurements along the three Axis (X, Y, Z)***
+
+*** See the documentation associated with the source data set for more information on
+    the meaning of these measurements
+
+All Fields are required and no NA values exist in the data
+
+
+ # Field		                                  Type   
+-- ------------------------------------------------  -------
+ 1 Activity                                          Factor 6 levels (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
+ 2 SubjectID                                         Int       
+ 3 TimeBodyAccAverageMeanX                           Num
+ 4 TimeBodyAccAverageMeanY                           Num
+ 5 TimeBodyAccAverageMeanZ                           Num
+ 6 TimeGravityAccAverageMeanX                        Num
+ 7 TimeGravityAccAverageMeanY                        Num
+ 8 TimeGravityAccAverageMeanZ                        Num
+ 9 TimeBodyAccJerkAverageMeanX                       Num
+10 TimeBodyAccJerkAverageMeanY                       Num
+11 TimeBodyAccJerkAverageMeanZ                       Num
+12 TimeBodyGyroAverageMeanX                          Num
+13 TimeBodyGyroAverageMeanY                          Num
+14 TimeBodyGyroAverageMeanZ                          Num
+15 TimeBodyGyroJerkAverageMeanX                      Num
+16 TimeBodyGyroJerkAverageMeanY                      Num
+17 TimeBodyGyroJerkAverageMeanZ                      Num
+18 TimeBodyAccMagAverageMean                         Num
+19 TimeGravityAccMagAverageMean                      Num
+20 TimeBodyAccJerkMagAverageMean                     Num
+21 TimeBodyGyroMagAverageMean                        Num
+22 TimeBodyGyroJerkMagAverageMean                    Num
+23 FrequencyBodyAccAverageMeanX                      Num
+24 FrequencyBodyAccAverageMeanY                      Num
+25 FrequencyBodyAccAverageMeanZ                      Num
+26 FrequencyBodyAccJerkAverageMeanX                  Num
+27 FrequencyBodyAccJerkAverageMeanY                  Num
+28 FrequencyBodyAccJerkAverageMeanZ                  Num
+29 FrequencyBodyGyroAverageMeanX                     Num
+30 FrequencyBodyGyroAverageMeanY                     Num
+31 FrequencyBodyGyroAverageMeanZ                     Num
+32 FrequencyBodyAccMagAverageMean                    Num
+33 FrequencyBodyBodyAccJerkMagAverageMean            Num
+34 FrequencyBodyBodyGyroMagAverageMean               Num
+35 FrequencyBodyBodyGyroJerkMagAverageMean           Num
+36 TimeBodyAccAverageStdDevX                         Num
+37 TimeBodyAccAverageStdDevY                         Num
+38 TimeBodyAccAverageStdDevZ                         Num
+39 TimeGravityAccAverageStdDevX                      Num
+40 TimeGravityAccAverageStdDevY                      Num
+41 TimeGravityAccAverageStdDevZ                      Num
+42 TimeBodyAccJerkAverageStdDevX                     Num
+43 TimeBodyAccJerkAverageStdDevY                     Num
+44 TimeBodyAccJerkAverageStdDevZ                     Num
+45 TimeBodyGyroAverageStdDevX                        Num
+46 TimeBodyGyroAverageStdDevY                        Num
+47 TimeBodyGyroAverageStdDevZ                        Num
+48 TimeBodyGyroJerkAverageStdDevX                    Num
+49 TimeBodyGyroJerkAverageStdDevY                    Num
+50 TimeBodyGyroJerkAverageStdDevZ                    Num
+51 TimeBodyAccMagAverageStdDev                       Num
+52 TimeGravityAccMagAverageStdDev                    Num
+53 TimeBodyAccJerkMagAverageStdDev                   Num
+54 TimeBodyGyroMagAverageStdDev                      Num
+55 TimeBodyGyroJerkMagAverageStdDev                  Num
+56 FrequencyBodyAccAverageStdDevX                    Num
+57 FrequencyBodyAccAverageStdDevY                    Num
+58 FrequencyBodyAccAverageStdDevZ                    Num
+59 FrequencyBodyAccJerkAverageStdDevX                Num
+60 FrequencyBodyAccJerkAverageStdDevY                Num
+61 FrequencyBodyAccJerkAverageStdDevZ                Num
+62 FrequencyBodyGyroAverageStdDevX                   Num
+63 FrequencyBodyGyroAverageStdDevY                   Num
+64 FrequencyBodyGyroAverageStdDevZ                   Num
+65 FrequencyBodyAccMagAverageStdDev                  Num
+66 FrequencyBodyBodyAccJerkMagAverageStdDev          Num
+67 FrequencyBodyBodyGyroMagAverageStdDev             Num
+68 FrequencyBodyBodyGyroJerkMagAverageStdDev         Num
+
+

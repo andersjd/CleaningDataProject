@@ -1,25 +1,33 @@
 ## Function: run_analysis
 ##
-## Description: 
+## Description: Uses the information from the "Human Activity Recognition Using Smartphones Data Set"
+##              to create a tidy summarized subset file.
 ##
-## Parameters: Resulting File Name
+## Parameters: 
+##    SourceDirectory:   
+##    ResultingFileName
 ##
-run_analysis <- function(ResultFileName="GettingDataCourseProjectResult.txt") {
+## Required Libraries
+##    plyr
+##    dplyr
+##    reshape2
+
+run_analysis <- function(SourceDirectory="./data/UCI HAR Dataset",ResultFileName="GettingDataCourseProjectResult.txt") {
   
-  ## load required librarys
+  ## load required libraries
   require(plyr)
   require(dplyr)
   require(reshape2)
   
   ## Read in all files
-  features <- read.table("./data/UCI HAR Dataset/features.txt")
-  activity_labels <- read.table("./data/UCI HAR Dataset/activity_labels.txt")
-  x_test <- read.table("./data/UCI HAR Dataset/test/x_test.txt")
-  y_test <- read.table("./data/UCI HAR Dataset/test/y_test.txt")
-  subject_test <- read.table("./data/UCI HAR Dataset/test/subject_test.txt")
-  x_train <- read.table("./data/UCI HAR Dataset/train/x_train.txt")
-  y_train <- read.table("./data/UCI HAR Dataset/train/y_train.txt")
-  subject_train <- read.table("./data/UCI HAR Dataset/train/subject_train.txt")
+  features <- read.table(paste(SourceDirectory,"/features.txt",sep=""))
+  activity_labels <- read.table(paste(SourceDirectory,"/activity_labels.txt",sep=""))
+  x_test <- read.table(paste(SourceDirectory,"/test/x_test.txt",sep=""))
+  y_test <- read.table(paste(SourceDirectory,"/test/y_test.txt",sep=""))
+  subject_test <- read.table(paste(SourceDirectory,"/test/subject_test.txt",sep=""))
+  x_train <- read.table(paste(SourceDirectory,"/train/x_train.txt",sep=""))
+  y_train <- read.table(paste(SourceDirectory,"/train/y_train.txt",sep=""))
+  subject_train <- read.table(paste(SourceDirectory,"/train/subject_train.txt",sep=""))
   
   ## Provider readable Column Names
   colnames(x_test) <- features$V2
@@ -42,15 +50,23 @@ run_analysis <- function(ResultFileName="GettingDataCourseProjectResult.txt") {
   ## Add in the Activity Names based on the ActivityID key
   x_joined <- join(x_combined,activity_labels,by="ActivityID")
   
-  ## Subset the the combined/joined set down to the key fields and measure which contain mean and std
-  x_subset <- select(x_joined,SubjectID,Activity,contains("mean()"),contains("std()"))
+  ## Subset the the combined/joined set down to the key fields and measure which contain mean() and std()
+  x_subset <- select(x_joined,SubjectID,Activity,grep("mean\\(\\)",features$V2),grep("std\\(\\)",features$V2))
   
   ## Reduce the subset down to a single line per Activity and Subject with the measures averaged
   x_melt <- melt(x_subset,id=c("SubjectID","Activity"))
   x_dcast <- dcast(x_melt,Activity + SubjectID ~ variable,mean)
 
-  ## Add "-avg" to the measure column names to indicate they are now avereaged values
-  colnames(x_dcast)[3:length(x_dcast)] <- paste(colnames(x_dcast)[3:length(x_dcast)],"-avg",sep="")
+  ## Clean up column names (somewhat) and indicate they are now avereaged values
+  colnames(x_dcast) <- sub("tBody","TimeBody",colnames(x_dcast))
+  colnames(x_dcast) <- sub("tGravity","TimeGravity",colnames(x_dcast))
+  colnames(x_dcast) <- sub("fBody","FrequencyBody",colnames(x_dcast))
+  colnames(x_dcast) <- sub("fGravity","FrequencyGravity",colnames(x_dcast))
+  colnames(x_dcast) <- sub("-mean\\(\\)","AverageMean",colnames(x_dcast))
+  colnames(x_dcast) <- sub("-std\\(\\)","AverageStdDev",colnames(x_dcast))
+  colnames(x_dcast) <- sub("-X","X",colnames(x_dcast))
+  colnames(x_dcast) <- sub("-Y","Y",colnames(x_dcast))
+  colnames(x_dcast) <- sub("-Z","Z",colnames(x_dcast))
   
   ## Write out the Finished Product
   write.table(x_dcast,ResultFileName,row.name=FALSE)
